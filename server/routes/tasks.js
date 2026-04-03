@@ -3,7 +3,7 @@ const router = express.Router();
 const Task = require('../models/Task');
 const { protect } = require('../authMiddleware');
 
-// 1. جلب المهام (المدير يشوف الكل، والموظف يشوف مهامه بس)
+// 1. جلب المهام (تم إضافة populate للتعليقات 🔥)
 router.get('/', protect, async (req, res) => {
     try {
         const tasks = await Task.find({
@@ -14,6 +14,7 @@ router.get('/', protect, async (req, res) => {
         })
         .populate('assignedTo', 'username')
         .populate('createdBy', 'username')
+        .populate('comments.user', 'username') // جلب اسم كاتب التعليق
         .sort({ createdAt: -1 });
 
         res.json(tasks);
@@ -22,23 +23,19 @@ router.get('/', protect, async (req, res) => {
     }
 });
 
-// 2. إضافة مهمة جديدة (توزيع للمدير، وإضافة شخصية للموظف) 🔥
+// 2. إضافة مهمة جديدة (تم دعم الـ deadline 🔥)
 router.post('/', protect, async (req, res) => {
     try {
-        const { title, description, assignedTo, priority } = req.body;
+        const { title, description, assignedTo, priority, deadline } = req.body;
 
         if (!title) {
             return res.status(400).json({ message: "عنوان المهمة مطلوب" });
         }
 
-        // --- منطق الصلاحيات الجديد ---
         let finalAssignedTo;
-
         if (req.user.role === 'admin') {
-            // المدير لازم يحدد موظف، وإذا ما حدد بنعتبرها لنفسه
             finalAssignedTo = assignedTo || req.user.id;
         } else {
-            // الموظف العادي: دائماً تُسند المهمة لنفسه حتى لو حاول يبعث ID ثاني
             finalAssignedTo = req.user.id;
         }
 
@@ -46,6 +43,7 @@ router.post('/', protect, async (req, res) => {
             title,
             description,
             priority: priority || 'Medium',
+            deadline, // تخزين تاريخ التسليم
             assignedTo: finalAssignedTo,
             createdBy: req.user.id
         });
@@ -61,14 +59,39 @@ router.post('/', protect, async (req, res) => {
     }
 });
 
-// 3. حذف مهمة (المدير يحذف أي شي عمله، والموظف يحذف مهامه الشخصية فقط)
+// 3. 🔥 جديد: إضافة تعليق للمهمة (النقاش الداخلي)
+router.post('/:id/comments', protect, async (req, res) => {
+    try {
+        const { text } = req.body;
+        if (!text) return res.status(400).json({ message: "التعليق لا يمكن أن يكون فارغاً" });
+
+        const task = await Task.findById(req.params.id);
+        if (!task) return res.status(404).json({ message: "المهمة غير موجودة" });
+
+        // إضافة التعليق للمصفوفة
+        task.comments.push({
+            text,
+            user: req.user.id
+        });
+
+        await task.save();
+
+        // جلب المهمة مرة أخرى مع بيانات المستخدمين للتعليقات
+        const updatedTask = await Task.findById(req.params.id)
+            .populate('comments.user', 'username');
+
+        res.status(201).json(updatedTask.comments);
+    } catch (err) {
+        res.status(500).json({ message: "خطأ في إضافة التعليق: " + err.message });
+    }
+});
+
+// 4. حذف مهمة 
 router.delete('/:id', protect, async (req, res) => {
     try {
         const task = await Task.findById(req.params.id);
-        
         if (!task) return res.status(404).json({ message: "المهمة غير موجودة" });
 
-        // التحقق: هل المستخدم هو من أنشأ المهمة؟
         if (task.createdBy.toString() !== req.user.id) {
             return res.status(403).json({ message: "غير مسموح لك بحذف هذه المهمة" });
         }
@@ -80,14 +103,16 @@ router.delete('/:id', protect, async (req, res) => {
     }
 });
 
-// 4. تحديث حالة المهمة
+// 5. تحديث حالة المهمة
 router.patch('/:id', protect, async (req, res) => {
     try {
         const updatedTask = await Task.findByIdAndUpdate(
             req.params.id, 
             { status: req.body.status }, 
             { new: true }
-        ).populate('assignedTo', 'username');
+        )
+        .populate('assignedTo', 'username')
+        .populate('comments.user', 'username');
 
         res.json(updatedTask);
     } catch (err) {

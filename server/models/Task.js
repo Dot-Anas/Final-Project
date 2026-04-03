@@ -10,16 +10,30 @@ const TaskSchema = new mongoose.Schema({
     },
     status: { 
         type: String, 
-        enum: ['Todo', 'Done'], // تحديد الخيارات المتاحة فقط
+        enum: ['Todo', 'Done'], 
         default: 'Todo' 
     },
-    // 🔥 التعديل المهم: ربط المهمة بمستخدم حقيقي عن طريق الـ ID
+    // 📅 التاريخ النهائي لتسليم المهمة (Deadline)
+    deadline: { 
+        type: Date 
+    },
+    // 💬 مصفوفة التعليقات للنقاش داخل التاسك
+    comments: [{
+        text: { type: String, required: true },
+        user: { 
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: 'User', 
+            required: true 
+        },
+        createdAt: { type: Date, default: Date.now }
+    }],
+    // ربط المهمة بالمستخدم المكلف بها
     assignedTo: { 
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'User', // بيحكي للمونجو: "روح دور على هاد الـ ID في جدول الـ User"
+        ref: 'User', 
         required: true 
     },
-    // مين المدير اللي أنشأ هاي المهمة
+    // المدير اللي أنشأ المهمة
     createdBy: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User', 
