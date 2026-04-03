@@ -19,7 +19,7 @@ function Dashboard() {
   const navigate = useNavigate();
 
   const token = localStorage.getItem("token");
-  const username = localStorage.getItem("username") || "أنس";
+  const username = localStorage.getItem("username") || "مستخدم جديد";
   const userRole = localStorage.getItem("role");
   const userId = localStorage.getItem("userId");
 
@@ -75,7 +75,7 @@ function Dashboard() {
       await axios.post(
         "http://localhost:5000/api/tasks",
         { title: newTask, assignedTo: targetUser, status: "Todo", deadline },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
       setNewTask("");
       setDeadline("");
@@ -91,7 +91,7 @@ function Dashboard() {
       await axios.post(
         `http://localhost:5000/api/tasks/${taskId}/comments`,
         { text: commentText[taskId] },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
       setCommentText((prev) => ({ ...prev, [taskId]: "" }));
       fetchTasks();
@@ -106,7 +106,7 @@ function Dashboard() {
       await axios.patch(
         `http://localhost:5000/api/tasks/${id}`,
         { status: newStatus },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
       fetchTasks();
     } catch (err) {

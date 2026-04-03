@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast'; // ✅ استيراد مكتبة الإشعارات العصرية
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -24,13 +25,16 @@ function Login() {
 
         console.log("User Role set to:", res.data.user.role);
 
-        alert(`أهلاً بك يا ${res.data.user.username}! جاري التحويل...`);
+        // ✅ إشعار نجاح عصري بدل رسالة المتصفح المزعجة
+        toast.success(`أهلاً بك يا ${res.data.user.username}! جاري التحويل...`);
         navigate('/dashboard');
       }
     } catch (err) {
       console.error(err);
       const errorMsg = err.response?.data?.message || "خطأ في البريد أو كلمة السر";
-      alert("فشل تسجيل الدخول: " + errorMsg);
+      
+      // ✅ إشعار خطأ عصري
+      toast.error("فشل تسجيل الدخول: " + errorMsg);
     }
   };
 
@@ -44,7 +48,7 @@ function Login() {
           <h2 className="text-3xl font-black text-slate-800 tracking-tight">
             تسجيل الدخول <span className="text-emerald-600">☕</span>
           </h2>
-          <p className="text-slate-500 mt-2">مرحباً بك في نظام "بن أرحب"</p>
+          <p className="text-slate-500 mt-2">مرحبًا بك في "إنجاز" حيث تُنظَّم مهامك وتُنجز بسهولة</p>
         </div>
         
         <div className="mb-5">

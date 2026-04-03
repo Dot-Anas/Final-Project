@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // 1. استدعاء الموجه
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast'; // ✅ استيراد مكتبة الإشعارات العصرية
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -9,7 +10,7 @@ function Register() {
     password: ''
   });
   
-  const navigate = useNavigate(); // 2. تعريف دالة التنقل
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,62 +18,70 @@ function Register() {
       const res = await axios.post('http://localhost:5000/api/auth/register', formData);
       
       if (res.status === 201) {
-        alert("تم إنشاء الحساب بنجاح! ✅");
-        // 3. التوجيه التلقائي لصفحة تسجيل الدخول
+        // ✅ إشعار نجاح عصري بدل رسالة المتصفح
+        toast.success("تم إنشاء الحساب بنجاح! ✅");
         navigate('/'); 
       }
     } catch (err) {
       const errorMsg = err.response?.data?.message || "حدث خطأ في التسجيل";
-      alert(errorMsg);
+      // ✅ إشعار خطأ عصري
+      toast.error(errorMsg);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-slate-100 p-4" dir="rtl">
+    <div className="flex items-center justify-center min-h-screen bg-slate-100 p-4 font-sans" dir="rtl">
       <form onSubmit={handleSubmit} className="p-8 bg-white rounded-3xl shadow-xl w-full max-w-md border border-slate-200">
-        <h2 className="text-3xl font-black mb-8 text-center text-slate-800">إنشاء حساب جديد</h2>
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-black text-slate-800 tracking-tight">إنشاء حساب جديد</h2>
+          <p className="text-slate-500 mt-2">انضم إلينا في نظام المهام</p>
+        </div>
         
-        {/* الحقول (Username, Email, Password) - زي ما هي عندك */}
         <div className="mb-4">
-          <label className="block text-sm font-bold mb-2">اسم المستخدم</label>
+          <label className="block text-sm font-bold text-slate-700 mb-2 mr-1">اسم المستخدم</label>
           <input 
-            className="w-full px-4 py-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-emerald-500"
+            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
             type="text" 
+            placeholder="أدخل اسمك"
             onChange={(e) => setFormData({...formData, username: e.target.value})} 
             required 
           />
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-bold mb-2">البريد الإلكتروني</label>
+          <label className="block text-sm font-bold text-slate-700 mb-2 mr-1">البريد الإلكتروني</label>
           <input 
-            className="w-full px-4 py-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-emerald-500"
+            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 transition-all text-left"
             type="email" 
+            placeholder="example@mail.com"
             onChange={(e) => setFormData({...formData, email: e.target.value})} 
             required 
           />
         </div>
 
         <div className="mb-8">
-          <label className="block text-sm font-bold mb-2">كلمة السر</label>
+          <label className="block text-sm font-bold text-slate-700 mb-2 mr-1">كلمة السر</label>
           <input 
-            className="w-full px-4 py-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-emerald-500"
+            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 transition-all text-left"
             type="password" 
+            placeholder="••••••••"
             onChange={(e) => setFormData({...formData, password: e.target.value})} 
             required 
           />
         </div>
 
-        <button type="submit" className="w-full py-3 bg-emerald-600 text-white font-bold rounded-2xl hover:bg-emerald-700 transition-all">
+        <button 
+          type="submit" 
+          className="w-full py-3 px-4 bg-emerald-600 text-white font-bold rounded-2xl hover:bg-emerald-700 transform hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-emerald-100"
+        >
           تسجيل الحساب
         </button>
 
-        {/* 4. إضافة زر "الرجوع" إذا غير رأيه قبل ما يسجل */}
-        <p className="mt-6 text-center text-sm text-slate-500">
+        <p className="mt-8 text-center text-sm text-slate-500 font-medium">
           لديك حساب بالفعل؟ 
           <span 
             onClick={() => navigate('/')} 
-            className="text-emerald-600 font-bold cursor-pointer hover:underline mr-1"
+            className="text-emerald-600 font-black cursor-pointer hover:underline mr-1"
           >
             سجل دخولك هنا
           </span>

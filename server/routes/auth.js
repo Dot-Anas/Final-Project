@@ -82,7 +82,9 @@ router.get('/users', protect, async (req, res) => {
             return res.status(403).json({ message: "غير مسموح لك برؤية قائمة الموظفين" });
         }
 
-        const users = await User.find({}).select('username _id');
+        // 🔥 التعديل تم هنا: ضفنا كلمة role عشان ترجع للفرونت إند
+        const users = await User.find({}).select('username _id role');
+        
         res.status(200).json(users);
     } catch (err) {
         res.status(500).json({ message: "فشل في جلب قائمة المستخدمين" });
