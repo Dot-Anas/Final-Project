@@ -16,7 +16,6 @@ function Dashboard() {
   const [commentText, setCommentText] = useState({});
   const [filter, setFilter] = useState("All");
   
-  // التحكم في حالة السايد بار (فتح/إغلاق) في الجوال
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   const navigate = useNavigate();
@@ -33,7 +32,6 @@ function Dashboard() {
     navigate("/");
   }, [navigate]);
 
-  // جلب المهام - تم تغيير الرابط ليكون نسبياً /api
   const fetchTasks = useCallback(async () => {
     if (!token) {
       handleLogout();
@@ -49,7 +47,6 @@ function Dashboard() {
     }
   }, [token, handleLogout]);
 
-  // جلب المستخدمين للمسؤولين فقط
   const fetchUsers = useCallback(async () => {
     if (!token || userRole !== "admin") return;
     try {
@@ -73,7 +70,6 @@ function Dashboard() {
     loadInitialData();
   }, [fetchTasks, fetchUsers]);
 
-  // إضافة مهمة جديدة
   const addTask = async (e) => {
     e.preventDefault();
     const targetUser = userRole === "admin" ? assignedTo : userId;
@@ -93,7 +89,6 @@ function Dashboard() {
     }
   };
 
-  // إضافة تعليق
   const addComment = async (taskId) => {
     if (!commentText[taskId]?.trim()) return;
     try {
@@ -109,7 +104,6 @@ function Dashboard() {
     }
   };
 
-  // تحديث حالة المهمة
   const toggleTaskStatus = async (id, currentStatus) => {
     try {
       const newStatus = currentStatus === "Done" ? "Todo" : "Done";
@@ -124,7 +118,6 @@ function Dashboard() {
     }
   };
 
-  // حذف مهمة
   const deleteTask = async (id) => {
     try {
       await axios.delete(`/api/tasks/${id}`, {
@@ -147,10 +140,9 @@ function Dashboard() {
 
   return (
     <div
-      className="min-h-screen bg-slate-50 flex font-sans text-right"
+      className="min-h-screen bg-slate-50 flex font-sans text-right overflow-x-hidden w-full"
       dir="rtl"
     >
-      {/* تمرير خصائص التحكم للسايد بار */}
       <Sidebar
         username={username}
         filter={filter}
@@ -160,10 +152,10 @@ function Dashboard() {
         toggleSidebar={toggleSidebar}
       />
 
-      <main className="flex-1 p-4 md:p-8 overflow-x-hidden">
-        <div className="max-w-4xl mx-auto">
+      {/* تم التعديل هنا: إضافة w-full وتقليل البادينج في الموبايل */}
+      <main className="flex-1 w-full p-3 md:p-8">
+        <div className="w-full max-w-4xl mx-auto">
           
-          {/* زر الهامبرغر - يظهر فقط في الجوال lg:hidden */}
           <div className="lg:hidden mb-6 flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
             <div className="flex items-center gap-2">
               <div className="h-8 w-8 bg-emerald-500 rounded-lg flex items-center justify-center text-white font-black italic">A</div>
@@ -194,7 +186,7 @@ function Dashboard() {
             userRole={userRole}
           />
 
-          <div className="space-y-8">
+          <div className="space-y-8 w-full">
             {filteredTasks.length > 0 ? (
               filteredTasks.map((task) => (
                 <TaskItem
@@ -210,7 +202,7 @@ function Dashboard() {
                 />
               ))
             ) : (
-              <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-slate-200">
+              <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-slate-200 w-full">
                 <p className="text-slate-400 font-bold">لا يوجد مهام حالياً في هذا القسم</p>
               </div>
             )}
