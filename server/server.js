@@ -5,11 +5,9 @@ require('dotenv').config();
 
 const app = express();
 
-// الإعدادات
 app.use(cors());
 app.use(express.json()); 
 
-// الـ Routes
 const authRoutes = require('./routes/auth');
 const taskRoutes = require('./routes/tasks');
 
@@ -20,13 +18,11 @@ app.get('/api', (req, res) => {
     res.send('Server is running... ✅');
 });
 
-// الاتصال بقاعدة البيانات
 const MONGO_URI = process.env.MONGO_URI;
 mongoose.connect(MONGO_URI)
     .then(() => console.log('MongoDB Connected Successfully! 🚀'))
     .catch(err => console.log('Database Connection Error ❌:', err));
 
-// هذا الجزء مهم جداً: لا تشغل app.listen إذا كنا على Vercel
 if (process.env.NODE_ENV !== 'production') {
     const PORT = process.env.PORT || 5000;
     app.listen(PORT, () => {
@@ -34,5 +30,4 @@ if (process.env.NODE_ENV !== 'production') {
     });
 }
 
-// تصدير الـ app لـ Vercel
 module.exports = app;
