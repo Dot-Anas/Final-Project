@@ -11,14 +11,21 @@
       "config": { "distDir": "dist" }
     }
   ],
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/server/server.js"
+  "routes": [
+    { 
+      "src": "/api/(.*)", 
+      "dest": "/server/server.js" 
     },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
+    { 
+      "src": "/(.*)", 
+      "dest": "/client/$1" 
+    },
+    { 
+      "handle": "filesystem" 
+    },
+    { 
+      "src": "/(.*)", 
+      "dest": "/client/index.html" 
     }
   ]
 }
