@@ -13,11 +13,9 @@ const TaskSchema = new mongoose.Schema({
         enum: ['Todo', 'Done'], 
         default: 'Todo' 
     },
-    // 📅 التاريخ النهائي لتسليم المهمة (Deadline)
     deadline: { 
         type: Date 
     },
-    // 💬 مصفوفة التعليقات للنقاش داخل التاسك
     comments: [{
         text: { type: String, required: true },
         user: { 
@@ -27,13 +25,11 @@ const TaskSchema = new mongoose.Schema({
         },
         createdAt: { type: Date, default: Date.now }
     }],
-    // ربط المهمة بالمستخدم المكلف بها
     assignedTo: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User', 
         required: true 
     },
-    // المدير اللي أنشأ المهمة
     createdBy: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User', 

@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 function Sidebar({ username, filter, setFilter, handleLogout }) {
   return (
     <aside className="w-72 bg-slate-900 text-white p-5 hidden lg:flex flex-col sticky top-0 h-screen shadow-2xl">
-      {/* قللنا المسافة السفلية للوجو */}
       <div className="mb-6 flex items-center gap-3 px-2">
         <div className="h-10 w-10 bg-emerald-500 rounded-xl flex items-center justify-center text-2xl font-black italic">
           A
@@ -14,7 +13,6 @@ function Sidebar({ username, filter, setFilter, handleLogout }) {
         </h2>
       </div>
 
-      {/* تم تقليل المسافات وإخفاء السكرول بار نهائياً */}
       <nav className="space-y-1 flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         <p className="text-[10px] font-black text-slate-500 mb-3 px-3 uppercase tracking-widest">
           عرض حسب الحالة
@@ -75,7 +73,6 @@ function Sidebar({ username, filter, setFilter, handleLogout }) {
         </div>
       </nav>
 
-      {/* بوكس البروفايل السفلي صار أرتب وأصغر شوي */}
       <div className="mt-auto p-3 bg-slate-800/50 rounded-2xl border border-slate-700">
         <p className="text-[11px] text-slate-500 mb-1">مسجل كـ:</p>
         <p className="font-bold text-sm text-emerald-400">{username}</p>

@@ -14,7 +14,6 @@ function Team() {
       navigate("/");
       return;
     }
-    // جلب الموظفين للمدير فقط
     if (userRole === "admin") {
       const fetchUsers = async () => {
         try {

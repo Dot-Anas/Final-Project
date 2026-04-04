@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-// استدعاء المكونات الفرعية من مجلد component
 import Sidebar from "../component/Sidebar";
 import Header from "../component/Header";
 import TaskForm from "../component/TaskForm";
@@ -125,12 +124,10 @@ function Dashboard() {
     }
   };
 
-  // 🔥 منطق الفلترة المطور للتقسيم
   const filteredTasks = tasks.filter((task) => {
     if (filter === "All") return true;
     if (filter === "Todo") return task.status === "Todo";
     if (filter === "Done") return task.status === "Done";
-    // فلاتر النوع
     if (filter === "Personal") return task.createdBy?._id === userId;
     if (filter === "Admin") return task.createdBy?._id !== userId;
     return true;
@@ -141,7 +138,6 @@ function Dashboard() {
       className="min-h-screen bg-slate-50 flex font-sans text-right"
       dir="rtl"
     >
-      {/* 1. السايد بار المطور 🛠️ */}
       <Sidebar
         username={username}
         filter={filter}
@@ -149,7 +145,6 @@ function Dashboard() {
         handleLogout={handleLogout}
       />
 
-      {/* 2. المحتوى الرئيسي */}
       <main className="flex-1 p-4 md:p-8 overflow-x-hidden">
         <div className="max-w-4xl mx-auto">
           <Header filter={filter} username={username} />

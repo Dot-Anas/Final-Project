@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast'; // ✅ استيراد مكتبة الإشعارات العصرية
+import toast from 'react-hot-toast';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -17,15 +17,13 @@ function Login() {
       });
 
       if (res.data.token) {
-        // 🔥 تخزين البيانات كاملة في الـ LocalStorage
         localStorage.setItem('token', res.data.token);
         localStorage.setItem('username', res.data.user.username);
-        localStorage.setItem('role', res.data.user.role); // ✅ هاد اللي بيفتح صلاحيات المدير
-        localStorage.setItem('userId', res.data.user.id); // ✅ هاد اللي بيحدد هويتك للمهمات الشخصية
+        localStorage.setItem('role', res.data.user.role);
+        localStorage.setItem('userId', res.data.user.id);
 
         console.log("User Role set to:", res.data.user.role);
 
-        // ✅ إشعار نجاح عصري بدل رسالة المتصفح المزعجة
         toast.success(`أهلاً بك يا ${res.data.user.username}! جاري التحويل...`);
         navigate('/dashboard');
       }
@@ -33,7 +31,6 @@ function Login() {
       console.error(err);
       const errorMsg = err.response?.data?.message || "خطأ في البريد أو كلمة السر";
       
-      // ✅ إشعار خطأ عصري
       toast.error("فشل تسجيل الدخول: " + errorMsg);
     }
   };

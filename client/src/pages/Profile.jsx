@@ -29,7 +29,6 @@ function Profile() {
     fetchTasks();
   }, [token, navigate]);
 
-  // حساب الإحصائيات الخاصة بالمستخدم فقط
   const myTasks = tasks.filter(
     (t) => t.assignedTo?._id === userId || t.createdBy?._id === userId
   );

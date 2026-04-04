@@ -14,11 +14,11 @@ const UserSchema = new mongoose.Schema({
     type: String, 
     required: true 
   },
-  // 🔥 إضافة الصلاحيات (الرتبة)
+
   role: { 
     type: String, 
-    enum: ['admin', 'worker'], // مسموح فقط بـ مدير أو موظف
-    default: 'worker'          // أي حساب جديد بكون موظف تلقائياً
+    enum: ['admin', 'worker'], 
+    default: 'worker'          
   }
 }, { timestamps: true });
 

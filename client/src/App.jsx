@@ -10,7 +10,6 @@ import Team from './pages/Team';
 function App() {
   return (
     <Router>
-      {/* ✅ هاي هي القطعة السحرية اللي بتعرض الإشعارات في كل الموقع */}
       <Toaster 
         position="top-center" 
         toastOptions={{

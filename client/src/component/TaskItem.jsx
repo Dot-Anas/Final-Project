@@ -53,7 +53,6 @@ function TaskItem({
           </div>
         </div>
 
-        {/* 🔥 تم تعديل شرط الحذف: للمدير أو صاحب المهمة الشخصية فقط */}
         {(userRole === "admin" || task.createdBy?._id === userId) && (
           <button
             onClick={() => deleteTask(task._id)}

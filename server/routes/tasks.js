@@ -3,7 +3,6 @@ const router = express.Router();
 const Task = require('../models/Task');
 const { protect } = require('../authMiddleware');
 
-// 1. جلب المهام (تم إضافة populate للتعليقات 🔥)
 router.get('/', protect, async (req, res) => {
     try {
         const tasks = await Task.find({
@@ -23,7 +22,6 @@ router.get('/', protect, async (req, res) => {
     }
 });
 
-// 2. إضافة مهمة جديدة (تم دعم الـ deadline 🔥)
 router.post('/', protect, async (req, res) => {
     try {
         const { title, description, assignedTo, priority, deadline } = req.body;
@@ -43,7 +41,7 @@ router.post('/', protect, async (req, res) => {
             title,
             description,
             priority: priority || 'Medium',
-            deadline, // تخزين تاريخ التسليم
+            deadline, 
             assignedTo: finalAssignedTo,
             createdBy: req.user.id
         });
@@ -59,7 +57,6 @@ router.post('/', protect, async (req, res) => {
     }
 });
 
-// 3. 🔥 جديد: إضافة تعليق للمهمة (النقاش الداخلي)
 router.post('/:id/comments', protect, async (req, res) => {
     try {
         const { text } = req.body;
@@ -68,7 +65,6 @@ router.post('/:id/comments', protect, async (req, res) => {
         const task = await Task.findById(req.params.id);
         if (!task) return res.status(404).json({ message: "المهمة غير موجودة" });
 
-        // إضافة التعليق للمصفوفة
         task.comments.push({
             text,
             user: req.user.id
@@ -76,7 +72,6 @@ router.post('/:id/comments', protect, async (req, res) => {
 
         await task.save();
 
-        // جلب المهمة مرة أخرى مع بيانات المستخدمين للتعليقات
         const updatedTask = await Task.findById(req.params.id)
             .populate('comments.user', 'username');
 
@@ -86,7 +81,6 @@ router.post('/:id/comments', protect, async (req, res) => {
     }
 });
 
-// 4. حذف مهمة 
 router.delete('/:id', protect, async (req, res) => {
     try {
         const task = await Task.findById(req.params.id);
@@ -103,7 +97,6 @@ router.delete('/:id', protect, async (req, res) => {
     }
 });
 
-// 5. تحديث حالة المهمة
 router.patch('/:id', protect, async (req, res) => {
     try {
         const updatedTask = await Task.findByIdAndUpdate(

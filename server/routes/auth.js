@@ -5,7 +5,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { protect } = require('../authMiddleware'); 
 
-// 1. رابط إنشاء حساب جديد (Register)
 router.post('/register', async (req, res) => {
     try {
         const { username, email, password } = req.body;
@@ -26,7 +25,6 @@ router.post('/register', async (req, res) => {
             username,
             email,
             password: hashedPassword,
-            // الـ role بياخد القيمة الافتراضية 'worker' من الـ Model
         });
 
         await newUser.save();
@@ -37,7 +35,6 @@ router.post('/register', async (req, res) => {
     }
 });
 
-// 2. رابط تسجيل الدخول (Login) - يرسل الـ Role للفرونت آند
 router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -52,7 +49,6 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ message: "كلمة السر غير صحيحة 🔑" });
         }
 
-        // 🔥 تضمين الـ role داخل التوكن
         const token = jwt.sign(
             { id: user._id, username: user.username, role: user.role }, 
             process.env.JWT_SECRET, 
@@ -66,7 +62,7 @@ router.post('/login', async (req, res) => {
                 id: user._id,
                 username: user.username,
                 email: user.email,
-                role: user.role // ✅ نرسل الرول لكي يتم تخزينه في المتصفح
+                role: user.role 
             }
         });
     } catch (err) {
@@ -74,15 +70,12 @@ router.post('/login', async (req, res) => {
     }
 });
 
-// 3. جلب قائمة المستخدمين (فقط للمدير Admin)
 router.get('/users', protect, async (req, res) => {
     try {
-        // ✅ حماية إضافية: التأكد أن المستخدم "أدمن" من التوكن
         if (req.user.role !== 'admin') {
             return res.status(403).json({ message: "غير مسموح لك برؤية قائمة الموظفين" });
         }
 
-        // 🔥 التعديل تم هنا: ضفنا كلمة role عشان ترجع للفرونت إند
         const users = await User.find({}).select('username _id role');
         
         res.status(200).json(users);

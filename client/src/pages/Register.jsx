@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast'; // ✅ استيراد مكتبة الإشعارات العصرية
+import toast from 'react-hot-toast'; 
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -18,13 +18,11 @@ function Register() {
       const res = await axios.post('http://localhost:5000/api/auth/register', formData);
       
       if (res.status === 201) {
-        // ✅ إشعار نجاح عصري بدل رسالة المتصفح
         toast.success("تم إنشاء الحساب بنجاح! ✅");
         navigate('/'); 
       }
     } catch (err) {
       const errorMsg = err.response?.data?.message || "حدث خطأ في التسجيل";
-      // ✅ إشعار خطأ عصري
       toast.error(errorMsg);
     }
   };
