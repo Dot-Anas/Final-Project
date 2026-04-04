@@ -15,7 +15,8 @@ function Dashboard() {
   const [deadline, setDeadline] = useState("");
   const [commentText, setCommentText] = useState({});
   const [filter, setFilter] = useState("All");
-  // --- إضافة الـ State للسايد بار ---
+  
+  // التحكم في حالة السايد بار (فتح/إغلاق) في الجوال
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   const navigate = useNavigate();
@@ -32,13 +33,13 @@ function Dashboard() {
     navigate("/");
   }, [navigate]);
 
+  // جلب المهام - تم تغيير الرابط ليكون نسبياً /api
   const fetchTasks = useCallback(async () => {
     if (!token) {
       handleLogout();
       return;
     }
     try {
-      // تعديل الرابط ليكون نسبي
       const res = await axios.get("/api/tasks", {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -48,10 +49,10 @@ function Dashboard() {
     }
   }, [token, handleLogout]);
 
+  // جلب المستخدمين للمسؤولين فقط
   const fetchUsers = useCallback(async () => {
     if (!token || userRole !== "admin") return;
     try {
-      // تعديل الرابط ليكون نسبي
       const res = await axios.get("/api/auth/users", {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -72,13 +73,13 @@ function Dashboard() {
     loadInitialData();
   }, [fetchTasks, fetchUsers]);
 
+  // إضافة مهمة جديدة
   const addTask = async (e) => {
     e.preventDefault();
     const targetUser = userRole === "admin" ? assignedTo : userId;
     if (!newTask.trim() || !targetUser) return;
 
     try {
-      // تعديل الرابط ليكون نسبي
       await axios.post(
         "/api/tasks",
         { title: newTask, assignedTo: targetUser, status: "Todo", deadline },
@@ -92,10 +93,10 @@ function Dashboard() {
     }
   };
 
+  // إضافة تعليق
   const addComment = async (taskId) => {
     if (!commentText[taskId]?.trim()) return;
     try {
-      // تعديل الرابط ليكون نسبي
       await axios.post(
         `/api/tasks/${taskId}/comments`,
         { text: commentText[taskId] },
@@ -108,10 +109,10 @@ function Dashboard() {
     }
   };
 
+  // تحديث حالة المهمة
   const toggleTaskStatus = async (id, currentStatus) => {
     try {
       const newStatus = currentStatus === "Done" ? "Todo" : "Done";
-      // تعديل الرابط ليكون نسبي
       await axios.patch(
         `/api/tasks/${id}`,
         { status: newStatus },
@@ -123,9 +124,9 @@ function Dashboard() {
     }
   };
 
+  // حذف مهمة
   const deleteTask = async (id) => {
     try {
-      // تعديل الرابط ليكون نسبي
       await axios.delete(`/api/tasks/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -149,7 +150,7 @@ function Dashboard() {
       className="min-h-screen bg-slate-50 flex font-sans text-right"
       dir="rtl"
     >
-      {/* تمرير الـ Props للسايد بار */}
+      {/* تمرير خصائص التحكم للسايد بار */}
       <Sidebar
         username={username}
         filter={filter}
@@ -161,14 +162,21 @@ function Dashboard() {
 
       <main className="flex-1 p-4 md:p-8 overflow-x-hidden">
         <div className="max-w-4xl mx-auto">
-          {/* إضافة زر لفتح القائمة يظهر فقط في الموبايل */}
-          <div className="lg:hidden mb-4 flex justify-between items-center bg-white p-3 rounded-2xl shadow-sm border border-slate-200">
-            <span className="font-black text-slate-800">نظام إنجاز</span>
+          
+          {/* زر الهامبرغر - يظهر فقط في الجوال lg:hidden */}
+          <div className="lg:hidden mb-6 flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-8 bg-emerald-500 rounded-lg flex items-center justify-center text-white font-black italic">A</div>
+              <span className="font-black text-slate-800">نظام إنجاز</span>
+            </div>
             <button 
               onClick={toggleSidebar}
-              className="p-2 bg-emerald-100 text-emerald-700 rounded-lg font-bold"
+              className="flex items-center gap-2 px-3 py-2 bg-slate-900 text-white rounded-xl text-sm font-bold active:scale-95 transition-all"
             >
-              ☰ القائمة
+              <span>القائمة</span>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
+              </svg>
             </button>
           </div>
 
@@ -187,19 +195,25 @@ function Dashboard() {
           />
 
           <div className="space-y-8">
-            {filteredTasks.map((task) => (
-              <TaskItem
-                key={task._id}
-                task={task}
-                userRole={userRole}
-                userId={userId}
-                toggleTaskStatus={toggleTaskStatus}
-                deleteTask={deleteTask}
-                commentText={commentText}
-                setCommentText={setCommentText}
-                addComment={addComment}
-              />
-            ))}
+            {filteredTasks.length > 0 ? (
+              filteredTasks.map((task) => (
+                <TaskItem
+                  key={task._id}
+                  task={task}
+                  userRole={userRole}
+                  userId={userId}
+                  toggleTaskStatus={toggleTaskStatus}
+                  deleteTask={deleteTask}
+                  commentText={commentText}
+                  setCommentText={setCommentText}
+                  addComment={addComment}
+                />
+              ))
+            ) : (
+              <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-slate-200">
+                <p className="text-slate-400 font-bold">لا يوجد مهام حالياً في هذا القسم</p>
+              </div>
+            )}
           </div>
         </div>
       </main>
