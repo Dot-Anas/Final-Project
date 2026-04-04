@@ -21,15 +21,13 @@ function TaskForm({
           type="text"
           className="w-full p-4 md:p-5 rounded-2xl border-none bg-slate-100 focus:bg-white focus:ring-4 focus:ring-slate-100 outline-none text-lg md:text-xl font-bold transition-all"
           placeholder={
-            userRole === "admin"
-              ? "ما هو التكليف الجديد؟"
-              : "أضف مهمة لنفسك..."
+            userRole === "admin" ? "ما هو التكليف الجديد؟" : "أضف مهمة لنفسك..."
           }
           value={newTask}
           onChange={(e) => setNewTask(e.target.value)}
           required
         />
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex flex-col gap-2">
             <label className="text-[10px] md:text-xs font-black text-slate-400 mr-2 uppercase">
@@ -42,7 +40,7 @@ function TaskForm({
               onChange={(e) => setDeadline(e.target.value)}
             />
           </div>
-          
+
           {userRole === "admin" ? (
             <div className="flex flex-col gap-2">
               <label className="text-[10px] md:text-xs font-black text-slate-400 mr-2 uppercase">
@@ -66,7 +64,7 @@ function TaskForm({
             </div>
           )}
         </div>
-        
+
         <button
           type="submit"
           className={`w-full py-4 md:py-5 rounded-2xl font-black text-white text-base md:text-lg shadow-xl transition-all active:scale-95 mt-2 ${userRole === "admin" ? "bg-emerald-600 hover:bg-emerald-700 shadow-emerald-200" : "bg-blue-600 hover:bg-blue-700 shadow-blue-200"}`}

@@ -24,7 +24,7 @@ function TaskItem({
           >
             ✓
           </button>
-          
+
           <div className="min-w-0 flex-1">
             <div className="flex gap-2 mb-2 flex-wrap">
               {task.createdBy?._id === task.assignedTo?._id ? (
@@ -37,15 +37,17 @@ function TaskItem({
                 </span>
               )}
             </div>
-            
+
             <h3
               className={`text-base md:text-xl font-black break-words ${
-                task.status === "Done" ? "line-through text-slate-300" : "text-slate-700"
+                task.status === "Done"
+                  ? "line-through text-slate-300"
+                  : "text-slate-700"
               }`}
             >
               {task.title}
             </h3>
-            
+
             <div className="flex flex-wrap gap-2 md:gap-3 mt-3">
               <span className="bg-slate-100 text-slate-500 text-[9px] md:text-[10px] font-black px-2 md:px-3 py-1 rounded-lg uppercase">
                 👤 {task.assignedTo?.username}
@@ -53,7 +55,8 @@ function TaskItem({
               {task.deadline && (
                 <span
                   className={`text-[9px] md:text-[10px] font-black px-2 md:px-3 py-1 rounded-lg uppercase ${
-                    new Date(task.deadline) < new Date() && task.status !== "Done"
+                    new Date(task.deadline) < new Date() &&
+                    task.status !== "Done"
                       ? "bg-red-100 text-red-600"
                       : "bg-amber-100 text-amber-600"
                   }`}
@@ -117,7 +120,7 @@ function TaskItem({
             </p>
           )}
         </div>
-        
+
         <div className="flex gap-2">
           <input
             type="text"
