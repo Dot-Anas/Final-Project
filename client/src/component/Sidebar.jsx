@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 function Sidebar({ username, filter, setFilter, handleLogout, isOpen, toggleSidebar }) {
+  // دالة صغيرة لإغلاق السايد بار عند النقر على خيار في الموبايل فقط
   const handleMobileClick = (action) => {
     action();
     if (window.innerWidth < 1024) {
@@ -11,6 +12,7 @@ function Sidebar({ username, filter, setFilter, handleLogout, isOpen, toggleSide
 
   return (
     <>
+      {/* 1. Backdrop: الطبقة الشفافة خلف السايد بار */}
       <div 
         className={`fixed inset-0 bg-slate-900/60 z-[60] transition-opacity duration-300 lg:hidden ${
           isOpen ? "opacity-100 visible" : "opacity-0 invisible"
@@ -18,12 +20,14 @@ function Sidebar({ username, filter, setFilter, handleLogout, isOpen, toggleSide
         onClick={toggleSidebar}
       ></div>
 
+      {/* 2. Aside: التعديل صار هون -> استبدلنا sticky بـ lg:sticky lg:top-0 */}
       <aside className={`
         fixed inset-y-0 right-0 z-[70] w-72 bg-slate-900 text-white p-5 shadow-2xl transition-transform duration-300 ease-in-out
         ${isOpen ? "translate-x-0" : "translate-x-full"} 
-        lg:relative lg:translate-x-0 lg:flex lg:flex-col h-screen sticky top-0
+        lg:sticky lg:top-0 lg:translate-x-0 lg:flex lg:flex-col h-screen
       `}>
         
+        {/* زر إغلاق للموبايل */}
         <button 
           onClick={toggleSidebar} 
           className="lg:hidden absolute left-4 top-5 text-slate-400 hover:text-white transition-colors"
@@ -33,6 +37,7 @@ function Sidebar({ username, filter, setFilter, handleLogout, isOpen, toggleSide
            </svg>
         </button>
 
+        {/* الشعار */}
         <div className="mb-8 flex items-center gap-3 px-2">
           <div className="h-10 w-10 bg-emerald-500 rounded-xl flex items-center justify-center text-2xl font-black italic text-white shadow-lg shadow-emerald-900/20">
             A
@@ -42,6 +47,7 @@ function Sidebar({ username, filter, setFilter, handleLogout, isOpen, toggleSide
           </h2>
         </div>
 
+        {/* الروابط والتنقل */}
         <nav className="space-y-1 flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden">
           <p className="text-[10px] font-black text-slate-500 mb-3 px-3 uppercase tracking-widest">
             عرض حسب الحالة
@@ -107,6 +113,7 @@ function Sidebar({ username, filter, setFilter, handleLogout, isOpen, toggleSide
           </div>
         </nav>
 
+        {/* معلومات المستخدم والخروج */}
         <div className="mt-auto p-4 bg-slate-800/40 rounded-2xl border border-slate-800">
           <p className="text-[11px] text-slate-500 mb-1">مسجل كـ:</p>
           <p className="font-bold text-sm text-emerald-400 truncate mb-2">{username}</p>
