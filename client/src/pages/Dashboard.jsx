@@ -15,12 +15,17 @@ function Dashboard() {
   const [deadline, setDeadline] = useState("");
   const [commentText, setCommentText] = useState({});
   const [filter, setFilter] = useState("All");
+  // --- إضافة الـ State للسايد بار ---
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  
   const navigate = useNavigate();
 
   const token = localStorage.getItem("token");
   const username = localStorage.getItem("username") || "مستخدم جديد";
   const userRole = localStorage.getItem("role");
   const userId = localStorage.getItem("userId");
+
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   const handleLogout = useCallback(() => {
     localStorage.clear();
@@ -33,7 +38,8 @@ function Dashboard() {
       return;
     }
     try {
-      const res = await axios.get("http://localhost:5000/api/tasks", {
+      // تعديل الرابط ليكون نسبي
+      const res = await axios.get("/api/tasks", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setTasks(res.data);
@@ -45,7 +51,8 @@ function Dashboard() {
   const fetchUsers = useCallback(async () => {
     if (!token || userRole !== "admin") return;
     try {
-      const res = await axios.get("http://localhost:5000/api/auth/users", {
+      // تعديل الرابط ليكون نسبي
+      const res = await axios.get("/api/auth/users", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUsers(res.data);
@@ -71,8 +78,9 @@ function Dashboard() {
     if (!newTask.trim() || !targetUser) return;
 
     try {
+      // تعديل الرابط ليكون نسبي
       await axios.post(
-        "http://localhost:5000/api/tasks",
+        "/api/tasks",
         { title: newTask, assignedTo: targetUser, status: "Todo", deadline },
         { headers: { Authorization: `Bearer ${token}` } },
       );
@@ -87,8 +95,9 @@ function Dashboard() {
   const addComment = async (taskId) => {
     if (!commentText[taskId]?.trim()) return;
     try {
+      // تعديل الرابط ليكون نسبي
       await axios.post(
-        `http://localhost:5000/api/tasks/${taskId}/comments`,
+        `/api/tasks/${taskId}/comments`,
         { text: commentText[taskId] },
         { headers: { Authorization: `Bearer ${token}` } },
       );
@@ -102,8 +111,9 @@ function Dashboard() {
   const toggleTaskStatus = async (id, currentStatus) => {
     try {
       const newStatus = currentStatus === "Done" ? "Todo" : "Done";
+      // تعديل الرابط ليكون نسبي
       await axios.patch(
-        `http://localhost:5000/api/tasks/${id}`,
+        `/api/tasks/${id}`,
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } },
       );
@@ -115,7 +125,8 @@ function Dashboard() {
 
   const deleteTask = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/tasks/${id}`, {
+      // تعديل الرابط ليكون نسبي
+      await axios.delete(`/api/tasks/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchTasks();
@@ -138,15 +149,29 @@ function Dashboard() {
       className="min-h-screen bg-slate-50 flex font-sans text-right"
       dir="rtl"
     >
+      {/* تمرير الـ Props للسايد بار */}
       <Sidebar
         username={username}
         filter={filter}
         setFilter={setFilter}
         handleLogout={handleLogout}
+        isOpen={isSidebarOpen}
+        toggleSidebar={toggleSidebar}
       />
 
       <main className="flex-1 p-4 md:p-8 overflow-x-hidden">
         <div className="max-w-4xl mx-auto">
+          {/* إضافة زر لفتح القائمة يظهر فقط في الموبايل */}
+          <div className="lg:hidden mb-4 flex justify-between items-center bg-white p-3 rounded-2xl shadow-sm border border-slate-200">
+            <span className="font-black text-slate-800">نظام إنجاز</span>
+            <button 
+              onClick={toggleSidebar}
+              className="p-2 bg-emerald-100 text-emerald-700 rounded-lg font-bold"
+            >
+              ☰ القائمة
+            </button>
+          </div>
+
           <Header filter={filter} username={username} />
 
           <TaskForm
