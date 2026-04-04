@@ -152,7 +152,6 @@ function Dashboard() {
         toggleSidebar={toggleSidebar}
       />
 
-      {/* تم التعديل هنا: إضافة w-full وتقليل البادينج في الموبايل */}
       <main className="flex-1 w-full p-3 md:p-8">
         <div className="w-full max-w-4xl mx-auto">
           

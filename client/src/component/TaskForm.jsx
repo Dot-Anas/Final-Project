@@ -14,13 +14,11 @@ function TaskForm({
   return (
     <form
       onSubmit={addTask}
-      // قللنا البادينج في الموبايل وضبطنا البوردر عشان ما يخنق الشاشة
       className={`bg-white p-5 md:p-8 rounded-3xl md:rounded-[40px] shadow-xl mb-8 md:mb-12 border-t-[8px] md:border-t-[12px] ${userRole === "admin" ? "border-emerald-500" : "border-blue-500"}`}
     >
       <div className="flex flex-col gap-4 md:gap-5">
         <input
           type="text"
-          // صغرنا الخط والبادينج شوي للموبايل
           className="w-full p-4 md:p-5 rounded-2xl border-none bg-slate-100 focus:bg-white focus:ring-4 focus:ring-slate-100 outline-none text-lg md:text-xl font-bold transition-all"
           placeholder={
             userRole === "admin"

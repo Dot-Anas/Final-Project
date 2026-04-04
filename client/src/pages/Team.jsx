@@ -17,7 +17,6 @@ function Team() {
     if (userRole === "admin") {
       const fetchUsers = async () => {
         try {
-          // تم تعديل الرابط ليكون نسبي (Relative) عشان يشتغل على Vercel
           const res = await axios.get("/api/auth/users", {
             headers: { Authorization: `Bearer ${token}` },
           });
@@ -31,11 +30,9 @@ function Team() {
   }, [token, userRole, navigate]);
 
   return (
-    // تم تقليل البادينج للموبايل p-4
     <div className="min-h-screen bg-slate-50 font-sans text-right p-4 md:p-8" dir="rtl">
       <div className="max-w-6xl mx-auto">
         
-        {/* تم ترتيب الهيدر ليكون متجاوب مع الموبايل */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 md:mb-10">
           <h1 className="text-2xl md:text-4xl font-black text-slate-800 tracking-tight">
             فريق العمل 🤝

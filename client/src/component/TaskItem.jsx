@@ -12,13 +12,10 @@ function TaskItem({
 }) {
   return (
     <div className="bg-white rounded-[25px] md:rounded-[35px] shadow-sm border border-slate-100 overflow-hidden transition-all hover:shadow-lg w-full">
-      {/* تقليل البادينج في الموبايل */}
       <div className="p-4 md:p-6 flex justify-between items-start gap-3 w-full">
-        {/* إضافة min-w-0 لمنع خروج النص عن الإطار */}
         <div className="flex gap-3 md:gap-5 flex-1 min-w-0">
           <button
             onClick={() => toggleTaskStatus(task._id, task.status)}
-            // استخدام flex-shrink-0 عشان الزر ما ينضغط
             className={`flex-shrink-0 mt-1 w-7 h-7 md:w-8 md:h-8 rounded-lg md:rounded-xl border-2 flex items-center justify-center transition-all ${
               task.status === "Done"
                 ? "bg-emerald-500 border-emerald-500 text-white shadow-md"
@@ -41,7 +38,6 @@ function TaskItem({
               )}
             </div>
             
-            {/* تصغير الخط في الموبايل واستخدام break-words بدل break-all */}
             <h3
               className={`text-base md:text-xl font-black break-words ${
                 task.status === "Done" ? "line-through text-slate-300" : "text-slate-700"
@@ -69,7 +65,6 @@ function TaskItem({
           </div>
         </div>
 
-        {/* زر الحذف */}
         {(userRole === "admin" || task.createdBy?._id === userId) && (
           <button
             onClick={() => deleteTask(task._id)}
@@ -93,7 +88,6 @@ function TaskItem({
         )}
       </div>
 
-      {/* قسم التعليقات */}
       <div className="bg-slate-50 p-4 md:p-6 border-t border-slate-100">
         <p className="text-[10px] font-black text-slate-400 mb-3 md:mb-4 px-1 md:px-2 uppercase tracking-widest">
           النقاش المباشر 💬
@@ -124,7 +118,6 @@ function TaskItem({
           )}
         </div>
         
-        {/* حقل إضافة تعليق */}
         <div className="flex gap-2">
           <input
             type="text"
